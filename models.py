@@ -20,8 +20,9 @@ def setup_db(app, database_path=database_path):
 
 
 '''
-Person
+Movies
 Have title and release year
+Can be formatted, created, deleted, changed
 '''
 class Movies(db.Model):  
   __tablename__ = 'movies'
@@ -40,7 +41,24 @@ class Movies(db.Model):
       'name': self.name,
       'releasedate': self.releasedate
       }
+  
+  def insert(self):
+        db.session.add(self)
+        db.session.commit()
 
+  def update(self):
+        db.session.commit()
+  
+  def delete(self):
+      db.session.delete(self)
+      db.session.commit()
+
+
+'''
+Actors
+Have name, age and gender
+Can be formatted, created, deleted, changed
+'''
 class Actors(db.Model):  
   __tablename__ = 'actors'
 
@@ -60,3 +78,14 @@ class Actors(db.Model):
       'age': self.age,
       'gender': self.gender
       }
+  
+  def insert(self):
+        db.session.add(self)
+        db.session.commit()
+
+  def update(self):
+        db.session.commit()
+
+  def delete(self):
+      db.session.delete(self)
+      db.session.commit()
