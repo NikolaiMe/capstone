@@ -1,8 +1,9 @@
 capstone heroku commands:
 
+Setting up heroku:
+
 heroku create nikolaicapstone
-git remote add capstone_heroku https://git.heroku.com/nikolaicapstone.git
-git remote add capstone_github https://github.com/NikolaiMe/capstone.git
+git remote add capstone https://github.com/NikolaiMe/capstone.git
 heroku addons:create heroku-postgresql:hobby-dev --app nikolaicapstone
 heroku config --app nikolaicapstone
 git add .
@@ -10,3 +11,8 @@ git commit -m 'initial commit'
 git push capstone master
 heroku run python manage.py db upgrade --app nikolaicapstone
 curl  https://nikolaicapstone.herokuapp.com/coolkids
+
+
+Setting up local db:
+export DATABASE_URL='postgres://nikol:hallo@localhost:5432/capstone'
+python manage.py db upgrade
