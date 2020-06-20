@@ -111,7 +111,29 @@ def create_app(test_config=None):
     '''
     @app.route('/actors/<actor_id>', methods=['DELETE'])
     def delete_actor(actor_id):
-        return "actor deleted"
+        abort_code = None
+
+        try:
+            actor_to_delete = Actors.query.filter(
+                Actors.id == actor_id).one_or_none()
+
+            if actor_to_delete is None:
+                abort_code = 404
+
+            if abort_code is None:
+                actor_to_delete.delete()
+                return jsonify({
+                    'success': True,
+                    'deleted': actor_id
+                })
+        except BaseException:
+            db.session.rollback()
+            abort_code = 422
+        finally:
+            db.session.close
+
+        if abort_code:
+            abort(abort_code)
 
     '''
     PATCH /actors/<actor_id>
@@ -191,7 +213,29 @@ def create_app(test_config=None):
     '''
     @app.route('/movies/<movie_id>', methods=['DELETE'])
     def delete_movie(movie_id):
-        return "movie deleted"
+        abort_code = None
+
+        try:
+            movie_to_delete = Movies.query.filter(
+                Movies.id == movie_id).one_or_none()
+
+            if movie_to_delete is None:
+                abort_code = 404
+
+            if abort_code is None:
+                movie_to_delete.delete()
+                return jsonify({
+                    'success': True,
+                    'deleted': movie_id
+                })
+        except BaseException:
+            db.session.rollback()
+            abort_code = 422
+        finally:
+            db.session.close
+
+        if abort_code:
+            abort(abort_code)
 
     '''
     PATCH /movie/<movie_id>
@@ -203,9 +247,11 @@ def create_app(test_config=None):
     def change_movie(movie_id):
         return "movie changed"
 
-    '''
-    Error Handling
-    '''
+
+
+
+    # ERROR HANDLING
+
     @app.errorhandler(404)
     def not_found(error):
         return jsonify({
