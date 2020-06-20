@@ -5,7 +5,7 @@ from flask_sqlalchemy import SQLAlchemy
 
 from app import create_app
 from models import setup_db, Actors, Movies
-
+ 
 
 class CapstoneTestCase(unittest.TestCase):
     """This class represents the capstone test case"""
@@ -14,8 +14,9 @@ class CapstoneTestCase(unittest.TestCase):
         """Define test variables and initialize app."""
         self.app = create_app()
         self.client = self.app.test_client
-        self.database_name = "capstone_test"
-        self.database_path = "postgresql://{}:{}@{}/{}".format('nikol', 'hallo', 'localhost:5432', self.database_name)
+        self.token = os.environ['CAPSTONE_JWT']
+        self.header = {'Authorization':'bearer ' + self.token}
+        self.database_path = os.environ['TEST_DATABASE_URL']
         setup_db(self.app, self.database_path)
 
         # binds the app to the current context
@@ -28,7 +29,7 @@ class CapstoneTestCase(unittest.TestCase):
 
     # ACTOR TESTS
     def test_get_all_actors(self):      
-        res = self.client().get('/actors')
+        res = self.client().get('/actors', headers=self.header)
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 200)
@@ -42,7 +43,7 @@ class CapstoneTestCase(unittest.TestCase):
             self.assertTrue(actor['gender'])
        
     def test_404_get_all_actors(self):
-        res = self.client().get('/actorz')
+        res = self.client().get('/actorz', headers=self.header)
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 404)
@@ -56,7 +57,7 @@ class CapstoneTestCase(unittest.TestCase):
             'gender': 'male'
         }
 
-        res = self.client().post('/actors', json = actor_to_be_created)
+        res = self.client().post('/actors', json = actor_to_be_created , headers=self.header)
         data = json.loads(res.data)
 
         new_actor = Actors.query.get(data['created'])
@@ -74,7 +75,7 @@ class CapstoneTestCase(unittest.TestCase):
             'gender': 'male'
         }
 
-        res = self.client().post('/actors', json = actor_to_be_created)
+        res = self.client().post('/actors', json = actor_to_be_created, headers=self.header)
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 422)
@@ -82,7 +83,7 @@ class CapstoneTestCase(unittest.TestCase):
     
     def test_delete_actor(self):
         actor_id_to_delete = Actors.query.first().id
-        res = self.client().delete('/actors/{}'.format(actor_id_to_delete))
+        res = self.client().delete('/actors/{}'.format(actor_id_to_delete), headers=self.header)
         data = json.loads(res.data)
         deleted_actor = Actors.query.get(actor_id_to_delete)
 
@@ -93,7 +94,7 @@ class CapstoneTestCase(unittest.TestCase):
 
     def test_404_delete_actor(self):
         actor_id_to_delete = Actors.query.order_by(Actors.id.desc()).first().id + 1
-        res = self.client().delete('/actors/{}'.format(actor_id_to_delete))
+        res = self.client().delete('/actors/{}'.format(actor_id_to_delete), headers=self.header)
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 404)
@@ -106,7 +107,7 @@ class CapstoneTestCase(unittest.TestCase):
             'gender': 'Changed_Gender'
         }
         actor_id_to_change = Actors.query.first().id
-        res = self.client().patch('/actors/{}'.format(actor_id_to_change), json = changes_to_be_made)
+        res = self.client().patch('/actors/{}'.format(actor_id_to_change), json = changes_to_be_made, headers=self.header)
         data = json.loads(res.data)
         changed_actor = Actors.query.get(data['changed'])
 
@@ -123,7 +124,7 @@ class CapstoneTestCase(unittest.TestCase):
             'gender': 'Changed_Gender'
         }
         actor_id_to_change = Actors.query.order_by(Actors.id.desc()).first().id + 1
-        res = self.client().patch('/actors/{}'.format(actor_id_to_change), json = changes_to_be_made)
+        res = self.client().patch('/actors/{}'.format(actor_id_to_change), json = changes_to_be_made, headers=self.header)
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 404)
@@ -133,7 +134,7 @@ class CapstoneTestCase(unittest.TestCase):
     # MOVIE TESTS
 
     def test_get_all_movies(self):      
-        res = self.client().get('/movies')
+        res = self.client().get('/movies', headers=self.header)
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 200)
@@ -146,7 +147,7 @@ class CapstoneTestCase(unittest.TestCase):
             self.assertTrue(movie['releasedate'])
        
     def test_404_get_all_movies(self):
-        res = self.client().get('/moviez')
+        res = self.client().get('/moviez', headers=self.header)
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 404)
@@ -158,7 +159,7 @@ class CapstoneTestCase(unittest.TestCase):
             'releasedate': '2016-06-22 19:10:25'
         }
 
-        res = self.client().post('/movies', json =  movie_to_be_created)
+        res = self.client().post('/movies', json =  movie_to_be_created, headers=self.header)
         data = json.loads(res.data)
 
         new_movie = Movies.query.get(data['created'])
@@ -174,7 +175,7 @@ class CapstoneTestCase(unittest.TestCase):
             'name': 'Lord of the Rings',
         }
 
-        res = self.client().post('/actors', json = movie_to_be_created)
+        res = self.client().post('/actors', json = movie_to_be_created, headers=self.header)
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 422)
@@ -182,7 +183,7 @@ class CapstoneTestCase(unittest.TestCase):
     
     def test_delete_movie(self):
         movie_id_to_delete = Movies.query.first().id
-        res = self.client().delete('/movies/{}'.format(movie_id_to_delete))
+        res = self.client().delete('/movies/{}'.format(movie_id_to_delete), headers=self.header)
         data = json.loads(res.data)
         deleted_movie = Movies.query.get(movie_id_to_delete)
 
@@ -193,7 +194,7 @@ class CapstoneTestCase(unittest.TestCase):
 
     def test_404_delete_movie(self):
         movie_id_to_delete = Movies.query.order_by(Movies.id.desc()).first().id + 1
-        res = self.client().delete('/movies/{}'.format(movie_id_to_delete))
+        res = self.client().delete('/movies/{}'.format(movie_id_to_delete), headers=self.header)
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 404)
@@ -205,7 +206,7 @@ class CapstoneTestCase(unittest.TestCase):
             'releasedate': '2000-01-01 00:00:00'
         }
         movie_id_to_change = Movies.query.first().id
-        res = self.client().patch('/movies/{}'.format(movie_id_to_change), json = changes_to_be_made)
+        res = self.client().patch('/movies/{}'.format(movie_id_to_change), json = changes_to_be_made, headers=self.header)
         data = json.loads(res.data)
         changed_movie = Movies.query.get(data['changed'])
 
@@ -222,7 +223,7 @@ class CapstoneTestCase(unittest.TestCase):
             'releasedate': '2000-01-01 00:00:00'
         }
         movie_id_to_change = Movies.query.order_by(Movies.id.desc()).first().id + 1
-        res = self.client().patch('/movies/{}'.format(movie_id_to_change), json = changes_to_be_made)
+        res = self.client().patch('/movies/{}'.format(movie_id_to_change), json = changes_to_be_made, headers=self.header)
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 404)

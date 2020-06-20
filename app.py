@@ -44,7 +44,8 @@ def create_app(test_config=None):
     This API can be used to get all available actors    
     '''
     @app.route('/actors', methods=['GET'])
-    def get_actors():
+    @requires_auth('get:actors')
+    def get_actors(token):
         actorSelection = Actors.query.all()
         actors = [actor.format() for actor in actorSelection]
 
@@ -60,7 +61,8 @@ def create_app(test_config=None):
     database    
     '''
     @app.route('/actors', methods=['POST'])
-    def create_actor():
+    @requires_auth('post:actors')
+    def create_actor(token):
         abort_code = None
 
         new_actor_name = None
@@ -110,7 +112,8 @@ def create_app(test_config=None):
     from the database    
     '''
     @app.route('/actors/<actor_id>', methods=['DELETE'])
-    def delete_actor(actor_id):
+    @requires_auth('delete:actors')
+    def delete_actor(token, actor_id):
         abort_code = None
 
         try:
@@ -142,7 +145,8 @@ def create_app(test_config=None):
     in the database    
     '''
     @app.route('/actors/<actor_id>', methods=['PATCH'])
-    def change_actor(actor_id):
+    @requires_auth('patch:actors')
+    def change_actor(token, actor_id):
         abort_code = None
 
         try:
@@ -194,7 +198,8 @@ def create_app(test_config=None):
     This API can be used to get all available movies    
     '''
     @app.route('/movies', methods=['GET'])
-    def get_movies():
+    @requires_auth('get:movies')
+    def get_movies(token):
         movieSelection = Movies.query.all()
         movies = [movie.format() for movie in movieSelection]
 
@@ -210,7 +215,8 @@ def create_app(test_config=None):
     database    
     '''
     @app.route('/movies', methods=['POST'])
-    def create_movie():
+    @requires_auth('post:movies')
+    def create_movie(token):
         abort_code = None
 
         new_movie_name = None
@@ -252,7 +258,8 @@ def create_app(test_config=None):
     from the database    
     '''
     @app.route('/movies/<movie_id>', methods=['DELETE'])
-    def delete_movie(movie_id):
+    @requires_auth('delete:movies')
+    def delete_movie(token, movie_id):
         abort_code = None
 
         try:
@@ -284,7 +291,8 @@ def create_app(test_config=None):
     in the database    
     '''
     @app.route('/movies/<movie_id>', methods=['PATCH'])
-    def change_movie(movie_id):
+    @requires_auth('patch:movies')
+    def change_movie(token, movie_id):
         abort_code = None
 
         try:
@@ -316,6 +324,7 @@ def create_app(test_config=None):
                 })
         except BaseException:
             db.session.rollback()
+            app.logger.error(sys.exc_info())
             abort_code = 422
         finally:
             db.session.close

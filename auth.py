@@ -7,7 +7,7 @@ from urllib.request import urlopen
 
 AUTH0_DOMAIN = 'fsnd-nikolai.eu.auth0.com'
 ALGORITHMS = ['RS256']
-API_AUDIENCE = 'coffeeshop'
+API_AUDIENCE = 'capstone'
 
 # AuthError Exception
 '''
@@ -171,7 +171,10 @@ def requires_auth(permission=''):
             try:
                 payload = verify_decode_jwt(token)
             except BaseException:
-                abort(401)
+                raise AuthError({
+                    'code': 'Unauthorized',
+                    'description': 'The server could not verify that you are authorized to access the URL requested.'
+                }, 401)
             check_permissions(permission, payload)
             return f(payload, *args, **kwargs)
         return wrapper
