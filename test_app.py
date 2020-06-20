@@ -48,6 +48,29 @@ class CapstoneTestCase(unittest.TestCase):
         self.assertEqual(res.status_code, 404)
         self.assertEqual(data['success'], False)
 
+    
+    # MOVIE TESTS
+
+    def test_get_all_actors(self):      
+        res = self.client().get('/movies')
+        data = json.loads(res.data)
+
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(data['success'], True)
+        self.assertTrue(data['movies'])
+        
+        for movie in data['movies']:
+            self.assertTrue(movie['id'])
+            self.assertTrue(movie['name'])
+            self.assertTrue(movie['releasedate'])
+       
+    def test_404_get_all_actors(self):
+        res = self.client().get('/moviez')
+        data = json.loads(res.data)
+
+        self.assertEqual(res.status_code, 404)
+        self.assertEqual(data['success'], False)
+
 # Make the tests conveniently executable
 if __name__ == "__main__":
     unittest.main()

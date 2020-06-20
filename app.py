@@ -91,7 +91,13 @@ def create_app(test_config=None):
     '''
     @app.route('/movies', methods=['GET'])
     def get_movies():
-        return "movies"
+        movieSelection = Movies.query.all()
+        movies = [movie.format() for movie in movieSelection]
+
+        return jsonify({
+            'success': True,
+            'movies': movies
+        })
 
     '''
     POST /movies
