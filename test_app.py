@@ -4,7 +4,7 @@ import json
 from flask_sqlalchemy import SQLAlchemy
 
 from app import create_app
-from models import setup_db
+from models import setup_db, Actors, Movies
 
 
 class CapstoneTestCase(unittest.TestCase):
@@ -48,10 +48,42 @@ class CapstoneTestCase(unittest.TestCase):
         self.assertEqual(res.status_code, 404)
         self.assertEqual(data['success'], False)
 
+
+    def test_create_new_actor(self):
+        actor_to_be_created={
+            'name': 'Nikolai',
+            'age': 27,
+            'gender': 'male'
+        }
+
+        res = self.client().post('/actors', json = actor_to_be_created)
+        data = json.loads(res.data)
+
+        new_actor = Actors.query.get(data['created'])
+
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(data['success'], True)
+        self.assertTrue(data['created'])
+        self.assertEqual(new_actor.name, actor_to_be_created['name'])
+        self.assertEqual(new_actor.age, actor_to_be_created['age'])
+        self.assertEqual(new_actor.gender, actor_to_be_created['gender'])
+
+    def test_422_create_new_actor(self):
+        actor_to_be_created={
+            'name': 'Nikolai',
+            'gender': 'male'
+        }
+
+        res = self.client().post('/actors', json = actor_to_be_created)
+        data = json.loads(res.data)
+
+        self.assertEqual(res.status_code, 422)
+        self.assertEqual(data['success'], False)
+
     
     # MOVIE TESTS
 
-    def test_get_all_actors(self):      
+    def test_get_all_movies(self):      
         res = self.client().get('/movies')
         data = json.loads(res.data)
 
@@ -64,11 +96,39 @@ class CapstoneTestCase(unittest.TestCase):
             self.assertTrue(movie['name'])
             self.assertTrue(movie['releasedate'])
        
-    def test_404_get_all_actors(self):
+    def test_404_get_all_movies(self):
         res = self.client().get('/moviez')
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 404)
+        self.assertEqual(data['success'], False)
+
+    def test_create_new_movie(self):
+        movie_to_be_created={
+            'name': 'Lord of the Rings',
+            'releasedate': '2016-06-22 19:10:25'
+        }
+
+        res = self.client().post('/movies', json =  movie_to_be_created)
+        data = json.loads(res.data)
+
+        new_movie = Movies.query.get(data['created'])
+
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(data['success'], True)
+        self.assertTrue(data['created'])
+        self.assertEqual(new_movie.name, movie_to_be_created['name'])
+        self.assertTrue(new_movie.releasedate.strftime("%Y-%m-%d %H:%M:%S"), movie_to_be_created['releasedate'])
+
+    def test_422_create_new_movie(self):
+        movie_to_be_created={
+            'name': 'Lord of the Rings',
+        }
+
+        res = self.client().post('/actors', json = movie_to_be_created)
+        data = json.loads(res.data)
+
+        self.assertEqual(res.status_code, 422)
         self.assertEqual(data['success'], False)
 
 # Make the tests conveniently executable

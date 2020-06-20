@@ -62,14 +62,15 @@ Can be formatted, created, deleted, changed
 class Actors(db.Model):  
   __tablename__ = 'actors'
 
-  id = Column(Integer, primary_key=True)
+  id = Column(Integer, primary_key = True)
   name = Column(String, nullable = False)
-  age = Column(db.Integer, nullable = False)
-  gender = Column(String, nullable=False)
+  age = Column(Integer, nullable = False)
+  gender = Column(String, nullable = False)
 
-  def __init__(self, name, releasedate):
+  def __init__(self, name, age, gender):
     self.name = name
-    self.releasedate = releasedate
+    self.age = age
+    self.gender = gender
 
   def format(self):
     return {

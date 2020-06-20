@@ -1,9 +1,11 @@
 import os
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request, abort
 from models import setup_db, db, Actors, Movies
 from flask_cors import CORS
 from flask_migrate import Migrate
 from auth import AuthError, requires_auth
+import sys
+
 
 
 def create_app(test_config=None):
@@ -59,7 +61,47 @@ def create_app(test_config=None):
     '''
     @app.route('/actors', methods=['POST'])
     def create_actor():
-        return "new actor created"
+        abort_code = None
+
+        new_actor_name = None
+        new_actor_age = None
+        new_actor_gender = None
+
+        # app.logger.info('POST /actors endpoint called')
+
+        body = request.get_json()
+
+        if body is not None:
+            new_actor_name = body.get('name', None)
+            new_actor_age = body.get('age', None)
+            new_actor_gender = body.get('gender', None)
+
+        try:
+            if (new_actor_name is None
+                    or new_actor_age is None
+                    or new_actor_gender is None):
+                # app.logger.error('there is something missing')
+                abort_code = 422
+
+            if abort_code is None:
+                actor_to_insert = Actors(
+                    name=new_actor_name,
+                    age=new_actor_age,
+                    gender=new_actor_gender)
+                actor_to_insert.insert()
+                return jsonify({
+                    'success': True,
+                    'created': actor_to_insert.id,
+                })
+        except BaseException:
+            db.session.rollback()
+            # app.logger.error(sys.exc_info())
+            abort_code = 422
+        finally:
+            db.session.close
+
+        if abort_code:
+            abort(abort_code)
 
     '''
     DELETE /actors/<actor_id>
@@ -107,7 +149,39 @@ def create_app(test_config=None):
     '''
     @app.route('/movies', methods=['POST'])
     def create_movie():
-        return "new movie created"
+        abort_code = None
+
+        new_movie_name = None
+        new_movie_releasedate = None
+
+        body = request.get_json()
+
+        if body is not None:
+            new_movie_name = body.get('name', None)
+            new_movie_releasedate = body.get('releasedate', None)
+
+        try:
+            if (new_movie_name is None
+                    or new_movie_releasedate is None):
+                    abort_code = 422
+
+            if abort_code is None:
+                movie_to_insert = Movies(
+                    name=new_movie_name,
+                    releasedate=new_movie_releasedate)
+                movie_to_insert.insert()
+                return jsonify({
+                    'success': True,
+                    'created': movie_to_insert.id,
+                })
+        except BaseException:
+            db.session.rollback()
+            abort_code = 422
+        finally:
+            db.session.close
+
+        if abort_code:
+            abort(abort_code)
 
     '''
     DELETE /movies/<movie_id>
