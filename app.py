@@ -1,6 +1,6 @@
 import os
 from flask import Flask, jsonify
-from models import setup_db, db
+from models import setup_db, db, Actors, Movies
 from flask_cors import CORS
 from flask_migrate import Migrate
 from auth import AuthError, requires_auth
@@ -15,9 +15,24 @@ def create_app(test_config=None):
     setup_db(app)
     CORS(app)
 
+    
+    '''
+    Definition of the CORS response Header
+
+    '''
+    @app.after_request
+    def after_request(response):
+        response.headers.add(
+            'Access-Control-Allow-Headers',
+            'Content-Type, Authorization')
+        response.headers.add(
+            'Access-Control-Allow-Methods',
+            'GET, POST, PATCH, DELETE, OPTIONS')
+        return response
+
 
     
-    ### ROUTES
+    ### ENDPOINTS
  
     ### Actor APIs
 
@@ -28,7 +43,13 @@ def create_app(test_config=None):
     '''
     @app.route('/actors', methods=['GET'])
     def get_actors():
-        return "actors"
+        actorSelection = Actors.query.all()
+        actors = [actor.format() for actor in actorSelection]
+
+        return jsonify({
+            'success': True,
+            'actors': actors
+        })
 
     '''
     POST /actors
