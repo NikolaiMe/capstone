@@ -83,7 +83,8 @@ def check_permissions(permission, payload):
     if permission not in payload['permissions']:
         raise AuthError({
             'code': 'invalid_header',
-            'description': "You don't have the permission to access the requested resource."
+            'description': '''You don't have the permission to
+                            access the requested resource.'''
         }, 403)
 
     return True
@@ -139,7 +140,8 @@ def verify_decode_jwt(token):
         except jwt.JWTClaimsError:
             raise AuthError({
                 'code': 'invalid_claims',
-                'description': 'Incorrect claims. Please, check the audience and issuer.'
+                'description': '''Incorrect claims. Please, check
+                                the audience and issuer.'''
             }, 401)
         except Exception:
             raise AuthError({
@@ -173,7 +175,9 @@ def requires_auth(permission=''):
             except BaseException:
                 raise AuthError({
                     'code': 'Unauthorized',
-                    'description': 'The server could not verify that you are authorized to access the URL requested.'
+                    'description': '''The server could not verify
+                                    that you are authorized to
+                                    access the URL requested.'''
                 }, 401)
             check_permissions(permission, payload)
             return f(payload, *args, **kwargs)

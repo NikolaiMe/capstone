@@ -21,54 +21,138 @@ SET default_tablespace = '';
 SET default_table_access_method = heap;
 
 --
--- Name: actors; Type: TABLE; Schema: public; Owner: nikol
+-- Name: actors; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.actors (
     id integer NOT NULL,
-    age integer,
-    name text,
-    gender text
+    name character varying NOT NULL,
+    age integer NOT NULL,
+    gender character varying NOT NULL
 );
 
 
-ALTER TABLE public.actors OWNER TO nikol;
+--
+-- Name: actors_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.actors_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
 
 --
--- Name: movies; Type: TABLE; Schema: public; Owner: nikol
+-- Name: actors_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.actors_id_seq OWNED BY public.actors.id;
+
+
+--
+-- Name: alembic_version; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.alembic_version (
+    version_num character varying(32) NOT NULL
+);
+
+
+--
+-- Name: movies; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.movies (
     id integer NOT NULL,
-    name text,
-    releasedate timestamp without time zone
+    name character varying NOT NULL,
+    releasedate timestamp without time zone NOT NULL
 );
 
 
-ALTER TABLE public.movies OWNER TO nikol;
-
 --
--- Data for Name: actors; Type: TABLE DATA; Schema: public; Owner: nikol
+-- Name: movies_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-COPY public.actors (id, age, name, gender) FROM stdin;
-1	27	Sarah	female
-2	27	Nikolai	male
+CREATE SEQUENCE public.movies_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: movies_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.movies_id_seq OWNED BY public.movies.id;
+
+
+--
+-- Name: actors id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.actors ALTER COLUMN id SET DEFAULT nextval('public.actors_id_seq'::regclass);
+
+
+--
+-- Name: movies id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.movies ALTER COLUMN id SET DEFAULT nextval('public.movies_id_seq'::regclass);
+
+
+--
+-- Data for Name: actors; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public.actors (id, name, age, gender) FROM stdin;
+1	Nikolai Merz	27	male
+2	John Johnson	53	male
+3	Vera Immer	23	female
 \.
 
 
 --
--- Data for Name: movies; Type: TABLE DATA; Schema: public; Owner: nikol
+-- Data for Name: alembic_version; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public.alembic_version (version_num) FROM stdin;
+ad7a836df0d1
+\.
+
+
+--
+-- Data for Name: movies; Type: TABLE DATA; Schema: public; Owner: -
 --
 
 COPY public.movies (id, name, releasedate) FROM stdin;
-1	Lord of the Rings	2016-06-22 19:10:25
-2	Harry Potter	2016-06-23 19:10:25
+1	Lord of the Rings	2006-12-21 00:00:00
+3	Spiderman 2	2012-08-30 00:00:00
+2	Harry Potter	2008-02-10 00:00:00
 \.
 
 
 --
--- Name: actors actors_pkey; Type: CONSTRAINT; Schema: public; Owner: nikol
+-- Name: actors_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+--
+
+SELECT pg_catalog.setval('public.actors_id_seq', 3, true);
+
+
+--
+-- Name: movies_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+--
+
+SELECT pg_catalog.setval('public.movies_id_seq', 3, true);
+
+
+--
+-- Name: actors actors_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.actors
@@ -76,7 +160,15 @@ ALTER TABLE ONLY public.actors
 
 
 --
--- Name: movies movies_pkey; Type: CONSTRAINT; Schema: public; Owner: nikol
+-- Name: alembic_version alembic_version_pkc; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.alembic_version
+    ADD CONSTRAINT alembic_version_pkc PRIMARY KEY (version_num);
+
+
+--
+-- Name: movies movies_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.movies

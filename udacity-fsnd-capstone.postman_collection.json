@@ -1,0 +1,1137 @@
+{
+	"info": {
+		"_postman_id": "e481e41c-d5ec-43d3-9aca-d4b457ca4fa6",
+		"name": "udacity-fsnd-capstone",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "executive producer",
+			"item": [
+				{
+					"name": "/actors",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "f930dc25-c978-447d-aad0-21336452c06a",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"    pm.globals.set(\"actor_id\", 1);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"value contains actor array\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.actors).to.be.an('array')\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/actors",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"actors"
+							]
+						},
+						"description": "This API can be used to get all available actors"
+					},
+					"response": []
+				},
+				{
+					"name": "/actors",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "68b7628d-abbb-4520-8ac4-3ecae73ad05d",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"new actor was created\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.created).to.be.a('number');\r",
+									"    pm.globals.set(\"actor_id\", jsonData.created);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"Peter\",\n    \"age\": 31,\n    \"gender\": \"male\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/actors",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"actors"
+							]
+						},
+						"description": "This API can be used to create a new actor in the database "
+					},
+					"response": []
+				},
+				{
+					"name": "/actors/<actor_id>",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "b8844c4f-fad7-481e-b900-53d9b56037f2",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"actor was changed\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.changed).to.be.any;\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\t\"name\": \"Petra\",\r\n    \"age\": 31,\r\n    \"gender\": \"female\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/actors/{{actor_id}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"actors",
+								"{{actor_id}}"
+							]
+						},
+						"description": "This API can be used to change the data of an actor in the database"
+					},
+					"response": []
+				},
+				{
+					"name": "/actors/<actor_id>",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "12967cb3-dd8d-45f0-992c-b06b01b47799",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"actor was deleted\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.deleted).to.be.any;\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/actors/{{actor_id}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"actors",
+								"{{actor_id}}"
+							]
+						},
+						"description": "This API can be used to delete a specific acto from the database "
+					},
+					"response": []
+				},
+				{
+					"name": "/movies",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "3b861db9-74c0-44ee-9bc9-a215d022eae4",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"    pm.globals.set(\"movie_id\", 1);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"value contains movie array\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.movies).to.be.an('array')\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/movies",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"movies"
+							]
+						},
+						"description": "This API can be used to get all available movies"
+					},
+					"response": []
+				},
+				{
+					"name": "/movies",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "3d18e00f-b7f1-408d-bdf6-2ca01746eb67",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"new movie was created\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.created).to.be.a('number');\r",
+									"    pm.globals.set(\"movie_id\", jsonData.created);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"Spiderman 2\",\n    \"releasedate\": \"2006-12-21 19:10:25\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/movies",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"movies"
+							]
+						},
+						"description": "This API can be used to create a new movie in the database "
+					},
+					"response": []
+				},
+				{
+					"name": "/movies/<movie_id>",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "ce7255b0-c0fa-4a2e-8f25-1d132954855a",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"movie was changed\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.changed).to.be.any;\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\t\"name\": \"Superman 2\",\r\n    \"releasedate\": \"2020-12-21 23:10:23\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/movies/{{movie_id}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"movies",
+								"{{movie_id}}"
+							]
+						},
+						"description": "This API can be used to change the data of an movie in the database"
+					},
+					"response": []
+				},
+				{
+					"name": "/movies/<movie_id>",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "cbf69ac1-7063-4977-9df1-18221d5f1863",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"movie was deleted\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.deleted).to.be.any;\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/movies/{{movie_id}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"movies",
+								"{{movie_id}}"
+							]
+						},
+						"description": "This API can be used to delete a specific acto from the database "
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IkxDVlZsaTVjdmdrWFZWOHh2Qjg5aSJ9.eyJpc3MiOiJodHRwczovL2ZzbmQtbmlrb2xhaS5ldS5hdXRoMC5jb20vIiwic3ViIjoiYXV0aDB8NWVlZTQxOWIwZWU5MjAwMDEzNTAwMWVmIiwiYXVkIjoiY2Fwc3RvbmUiLCJpYXQiOjE1OTI2OTAzNzksImV4cCI6MTU5Mjc3Njc3OSwiYXpwIjoieE80N0dnN0FmWW9CTnc4MzYwYmdHaGE1ajdVbW9iaDMiLCJzY29wZSI6IiIsInBlcm1pc3Npb25zIjpbImRlbGV0ZTphY3RvcnMiLCJkZWxldGU6bW92aWVzIiwiZ2V0OmFjdG9ycyIsImdldDptb3ZpZXMiLCJwYXRjaDphY3RvcnMiLCJwYXRjaDptb3ZpZXMiLCJwb3N0OmFjdG9ycyIsInBvc3Q6bW92aWVzIl19.lekZmRJM1mycjvcgJz3ww3MCn95c5TbHXJ35Ro0z16VdfqUGwiUWVPzBWjla0qmBTgNxKqa0HMap6W9qGINPlhLyQv8r87XdTUm6odd5J9CQTV_pC6pVJwSPGOypSCaQHftMmoI00UFcq5qGRTkWdHW0IvghMgnMyn_HhVS9a_0RHi5GFp5N66PVrDANQ9-BSiEHoHOUEjZFC7neHg9EX5FjsQLmvV-CCcVphpYPX1h_7uApYE7A6J8oiCXaz9t56ChwI2Cx0w9RsMeNLXHcEIMQa-5rEPewN4EBdzpTAkVeyYYmwpd6cfghJW1z9m5t9my-VMhcUKrvHmSwYjQJqA",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "2db44322-92d4-4702-8bd7-b1c09d5e7059",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "ce461589-c5a8-4c81-969c-476dbd1f9664",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "casting director",
+			"item": [
+				{
+					"name": "/actors",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "d00ae385-9485-4e92-9f7b-d30dba2d0460",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"    pm.globals.set(\"actor_id\", 1);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"value contains actor array\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.actors).to.be.an('array')\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/actors",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"actors"
+							]
+						},
+						"description": "This API can be used to get all available actors"
+					},
+					"response": []
+				},
+				{
+					"name": "/actors",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "4cda3f4c-f308-4b95-ab62-f538c7f52a42",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"new actor was created\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.created).to.be.a('number');\r",
+									"    pm.globals.set(\"actor_id\", jsonData.created);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"Peter\",\n    \"age\": 31,\n    \"gender\": \"male\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/actors",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"actors"
+							]
+						},
+						"description": "This API can be used to create a new actor in the database "
+					},
+					"response": []
+				},
+				{
+					"name": "/actors/<actor_id>",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "0d93dfe9-2e93-42d4-a48f-880a3aceb069",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"actor was changed\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.changed).to.be.any;\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\t\"name\": \"Brad Pitt\",\r\n    \"age\": 56,\r\n    \"gender\": \"male\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/actors/{{actor_id}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"actors",
+								"{{actor_id}}"
+							]
+						},
+						"description": "This API can be used to change the data of an actor in the database"
+					},
+					"response": []
+				},
+				{
+					"name": "/actors/<actor_id>",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "2e38315a-ef7b-4c8a-9927-ab13a187e392",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"actor was deleted\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.deleted).to.be.any;\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/actors/{{actor_id}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"actors",
+								"{{actor_id}}"
+							]
+						},
+						"description": "This API can be used to delete a specific acto from the database "
+					},
+					"response": []
+				},
+				{
+					"name": "/movies",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "eb7121e3-0102-4a4e-a70d-c638b36c5de9",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"    pm.globals.set(\"movie_id\", 4);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"value contains movie array\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.movies).to.be.an('array')\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/movies",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"movies"
+							]
+						},
+						"description": "This API can be used to get all available movies"
+					},
+					"response": []
+				},
+				{
+					"name": "/movies",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "1a475930-4c85-40c1-91d1-51ae26dfa560",
+								"exec": [
+									"pm.test(\"Status code is 403\", function () {\r",
+									"    pm.response.to.have.status(403);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"Spiderman 2\",\n    \"releasedate\": \"2006-12-21 19:10:25\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/movies",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"movies"
+							]
+						},
+						"description": "This API can be used to create a new movie in the database "
+					},
+					"response": []
+				},
+				{
+					"name": "/movies/<movie_id>",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "7b907bf5-ba85-4177-845c-926faf149458",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"movie was changed\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.changed).to.be.any;\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\t\"name\": \"Superman 2\",\r\n    \"releasedate\": \"2020-12-21 23:10:23\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/movies/{{movie_id}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"movies",
+								"{{movie_id}}"
+							]
+						},
+						"description": "This API can be used to change the data of an movie in the database"
+					},
+					"response": []
+				},
+				{
+					"name": "/movies/<movie_id>",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "edf67331-44e1-4b27-97dd-ad1bf2e9203d",
+								"exec": [
+									"pm.test(\"Status code is 403\", function () {\r",
+									"    pm.response.to.have.status(403);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/movies/{{movie_id}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"movies",
+								"{{movie_id}}"
+							]
+						},
+						"description": "This API can be used to delete a specific acto from the database "
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IkxDVlZsaTVjdmdrWFZWOHh2Qjg5aSJ9.eyJpc3MiOiJodHRwczovL2ZzbmQtbmlrb2xhaS5ldS5hdXRoMC5jb20vIiwic3ViIjoiYXV0aDB8NWVlZTY2YmM2NWIwYTYwMDE5MmI2MjdhIiwiYXVkIjoiY2Fwc3RvbmUiLCJpYXQiOjE1OTI2OTA1NDMsImV4cCI6MTU5Mjc3Njk0MywiYXpwIjoieE80N0dnN0FmWW9CTnc4MzYwYmdHaGE1ajdVbW9iaDMiLCJzY29wZSI6IiIsInBlcm1pc3Npb25zIjpbImRlbGV0ZTphY3RvcnMiLCJnZXQ6YWN0b3JzIiwiZ2V0Om1vdmllcyIsInBhdGNoOmFjdG9ycyIsInBhdGNoOm1vdmllcyIsInBvc3Q6YWN0b3JzIl19.vg8T-XzVbOmiwIQu600XNfxkbsX6AtmtRTm-eSdqUmmBKUQ1R3C7TN3IM84y20pgb5znFv0_pF7Hcmn1_RcmNzdsF77JghH8TxBfDOvXbPbV7gCZNMoCQBTw2bXiE87JxF_eiHvxrw4r2Qf8zbHblAhnLG1MaBzn6oaEenQ4-9ilESWSr6J8ZwDaXRKe4ikof4haJMhKRzSU1tL_78d3LjOUcnmPZG6al1X4RBWqkIA8m4r6oG7pCabGgolViRG98inP-JkFvKx45fCoIr0VZL_N7_zKwwoUor-OE5Ejg_Fw8-ZUSsE5eOsonn6sP38RdvdKz8Bc_ZabVQvyjVmctQ",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "ef63e680-5321-4026-81d5-360bcf41577e",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "f88d51d3-1d66-48fa-86a3-46644ec48472",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "casting assistant",
+			"item": [
+				{
+					"name": "/actors",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "5db6d5ac-0033-4038-b537-1f0235d6cace",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"    pm.globals.set(\"actor_id\", 1);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"value contains actor array\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.actors).to.be.an('array')\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/actors",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"actors"
+							]
+						},
+						"description": "This API can be used to get all available actors"
+					},
+					"response": []
+				},
+				{
+					"name": "/actors",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "2f22ef91-e33c-450d-a1df-8acd66bcba50",
+								"exec": [
+									"pm.test(\"Status code is 403\", function () {\r",
+									"    pm.response.to.have.status(403);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"Peter\",\n    \"age\": 31,\n    \"gender\": \"male\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/actors",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"actors"
+							]
+						},
+						"description": "This API can be used to create a new actor in the database "
+					},
+					"response": []
+				},
+				{
+					"name": "/actors/<actor_id>",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "e9d30dad-b6aa-40f5-ab2b-3d98e97a2a6d",
+								"exec": [
+									"pm.test(\"Status code is 403\", function () {\r",
+									"    pm.response.to.have.status(403);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\t\"name\": \"Petra\",\r\n    \"age\": 31,\r\n    \"gender\": \"female\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/actors/{{actor_id}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"actors",
+								"{{actor_id}}"
+							]
+						},
+						"description": "This API can be used to change the data of an actor in the database"
+					},
+					"response": []
+				},
+				{
+					"name": "/actors/<actor_id>",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "ed477085-c286-4624-9c85-e6b300bbeb4e",
+								"exec": [
+									"pm.test(\"Status code is 403\", function () {\r",
+									"    pm.response.to.have.status(403);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/actors/{{actor_id}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"actors",
+								"{{actor_id}}"
+							]
+						},
+						"description": "This API can be used to delete a specific acto from the database "
+					},
+					"response": []
+				},
+				{
+					"name": "/movies",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "d3d1d963-4664-435a-a6ab-d2860e27123c",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"    pm.globals.set(\"movie_id\", 1);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"value contains movie array\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.movies).to.be.an('array')\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/movies",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"movies"
+							]
+						},
+						"description": "This API can be used to get all available movies"
+					},
+					"response": []
+				},
+				{
+					"name": "/movies",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "4ebcce5b-2617-4c56-a577-ff300337b88c",
+								"exec": [
+									"pm.test(\"Status code is 403\", function () {\r",
+									"    pm.response.to.have.status(403);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"Spiderman 2\",\n    \"releasedate\": \"2006-12-21 19:10:25\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/movies",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"movies"
+							]
+						},
+						"description": "This API can be used to create a new movie in the database "
+					},
+					"response": []
+				},
+				{
+					"name": "/movies/<movie_id>",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "5c15d31d-418b-4884-a8bb-4502aacb9582",
+								"exec": [
+									"pm.test(\"Status code is 403\", function () {\r",
+									"    pm.response.to.have.status(403);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\t\"name\": \"Superman 2\",\r\n    \"releasedate\": \"2020-12-21 23:10:23\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/movies/{{movie_id}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"movies",
+								"{{movie_id}}"
+							]
+						},
+						"description": "This API can be used to change the data of an movie in the database"
+					},
+					"response": []
+				},
+				{
+					"name": "/movies/<movie_id>",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "94ef7360-71a3-453a-bc8c-236d4841887a",
+								"exec": [
+									"pm.test(\"Status code is 403\", function () {\r",
+									"    pm.response.to.have.status(403);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/movies/{{movie_id}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"movies",
+								"{{movie_id}}"
+							]
+						},
+						"description": "This API can be used to delete a specific acto from the database "
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IkxDVlZsaTVjdmdrWFZWOHh2Qjg5aSJ9.eyJpc3MiOiJodHRwczovL2ZzbmQtbmlrb2xhaS5ldS5hdXRoMC5jb20vIiwic3ViIjoiYXV0aDB8NWVlZTY2NDgzNzcwMjgwMDE5ODQxNjliIiwiYXVkIjoiY2Fwc3RvbmUiLCJpYXQiOjE1OTI2OTA0ODEsImV4cCI6MTU5Mjc3Njg4MSwiYXpwIjoieE80N0dnN0FmWW9CTnc4MzYwYmdHaGE1ajdVbW9iaDMiLCJzY29wZSI6IiIsInBlcm1pc3Npb25zIjpbImdldDphY3RvcnMiLCJnZXQ6bW92aWVzIl19.pr9GP437wkSiJ8im7i60ttlHDdhtMyM4qzmwY6IQ1dYbs-Ce6ovjlGpJGXu7P0OatpinzOaN2DeVAqrK844kZKeNogWFPPjDY5xNuH0ZqUNHgttZH-hAdQtCgV7OKGtzMjh8z-qnIp5oH9qx45GLy6Z2WN8KGUAnEXkJUtL0rf2zE7sKQVt7SehrMiQQIxCua3Y1Yd_aJscbSxlHskzb1XjlwfjhXIMvfaUGT0igfRqgL_dhndWMEltz5ZUWk-XbBAhKvwHC3wAGwdPCbb-PNeg_ceoSeHpbq7J3qfTlqNubZItf4O5dwDzoErEvodSKeio0cG3tR0lI-pBuUaNjBA",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "656bb154-2675-4bae-9b8e-9367ca0a80b7",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "b1103d05-5026-4ab8-bf4d-286166035ccb",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			],
+			"protocolProfileBehavior": {}
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "f567a4e6-afa5-4d00-9c29-d0a7fc7dea99",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "2bcc4134-3d0a-455a-9950-3dd7256facb9",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"id": "7da57255-323a-4201-bb1d-13f58032eece",
+			"key": "host2",
+			"value": "localhost:5000",
+			"type": "string"
+		},
+		{
+			"id": "0ffaf3f8-05ad-41ca-8c0d-fd832f8fded5",
+			"key": "host",
+			"value": "https://nikolaicapstone.herokuapp.com/",
+			"type": "string"
+		}
+	],
+	"protocolProfileBehavior": {}
+}

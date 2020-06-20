@@ -7,17 +7,15 @@ from auth import AuthError, requires_auth
 import sys
 
 
-
 def create_app(test_config=None):
 
-    ### INITIALIZATION
+    # INITIALIZATION
 
     app = Flask(__name__)
-    migrate = Migrate(app,db)
+    migrate = Migrate(app, db)
     setup_db(app)
     CORS(app)
 
-    
     '''
     Definition of the CORS response Header
 
@@ -32,16 +30,14 @@ def create_app(test_config=None):
             'GET, POST, PATCH, DELETE, OPTIONS')
         return response
 
+    # ENDPOINTS
 
-    
-    ### ENDPOINTS
- 
-    ### Actor APIs
+    # Actor APIs
 
     '''
     GET /actors
 
-    This API can be used to get all available actors    
+    This API can be used to get all available actors
     '''
     @app.route('/actors', methods=['GET'])
     @requires_auth('get:actors')
@@ -58,7 +54,7 @@ def create_app(test_config=None):
     POST /actors
 
     This API can be used to create a new actor in the
-    database    
+    database
     '''
     @app.route('/actors', methods=['POST'])
     @requires_auth('post:actors')
@@ -109,7 +105,7 @@ def create_app(test_config=None):
     DELETE /actors/<actor_id>
 
     This API can be used to delete a specific actor
-    from the database    
+    from the database
     '''
     @app.route('/actors/<actor_id>', methods=['DELETE'])
     @requires_auth('delete:actors')
@@ -142,7 +138,7 @@ def create_app(test_config=None):
     PATCH /actors/<actor_id>
 
     This API can be used to change the data of an actor
-    in the database    
+    in the database
     '''
     @app.route('/actors/<actor_id>', methods=['PATCH'])
     @requires_auth('patch:actors')
@@ -166,7 +162,7 @@ def create_app(test_config=None):
             if abort_code is None:
                 if new_actor_name is not None:
                     actor_to_change.name = new_actor_name
-                
+
                 if new_actor_age is not None:
                     actor_to_change.age = new_actor_age
 
@@ -189,13 +185,12 @@ def create_app(test_config=None):
         if abort_code:
             abort(abort_code)
 
-
-    ### Basic movie APIs
+    # Basic movie APIs
 
     '''
     GET /movies
 
-    This API can be used to get all available movies    
+    This API can be used to get all available movies
     '''
     @app.route('/movies', methods=['GET'])
     @requires_auth('get:movies')
@@ -212,7 +207,7 @@ def create_app(test_config=None):
     POST /movies
 
     This API can be used to create a new movie in the
-    database    
+    database
     '''
     @app.route('/movies', methods=['POST'])
     @requires_auth('post:movies')
@@ -231,7 +226,7 @@ def create_app(test_config=None):
         try:
             if (new_movie_name is None
                     or new_movie_releasedate is None):
-                    abort_code = 422
+                abort_code = 422
 
             if abort_code is None:
                 movie_to_insert = Movies(
@@ -255,7 +250,7 @@ def create_app(test_config=None):
     DELETE /movies/<movie_id>
 
     This API can be used to delete a specific movie
-    from the database    
+    from the database
     '''
     @app.route('/movies/<movie_id>', methods=['DELETE'])
     @requires_auth('delete:movies')
@@ -288,7 +283,7 @@ def create_app(test_config=None):
     PATCH /movie/<movie_id>
 
     This API can be used to change the data of a movie
-    in the database    
+    in the database
     '''
     @app.route('/movies/<movie_id>', methods=['PATCH'])
     @requires_auth('patch:movies')
@@ -311,7 +306,7 @@ def create_app(test_config=None):
             if abort_code is None:
                 if new_movie_name is not None:
                     movie_to_change.name = new_movie_name
-                
+
                 if new_movie_releasedate is not None:
                     movie_to_change.releasedate = new_movie_releasedate
 
@@ -332,9 +327,6 @@ def create_app(test_config=None):
         if abort_code:
             abort(abort_code)
 
-
-
-
     # ERROR HANDLING
 
     @app.errorhandler(404)
@@ -345,7 +337,6 @@ def create_app(test_config=None):
             "message": "resource not found"
         }), 404
 
-
     @app.errorhandler(422)
     def unprocessable(error):
         return jsonify({
@@ -354,7 +345,6 @@ def create_app(test_config=None):
             "message": "unprocessable"
         }), 422
 
-
     @app.errorhandler(400)
     def bad_request(error):
         return jsonify({
@@ -362,7 +352,6 @@ def create_app(test_config=None):
             "error": 400,
             "message": "bad request"
         }), 400
-
 
     @app.errorhandler(AuthError)
     def auth_error(e):
@@ -373,6 +362,7 @@ def create_app(test_config=None):
         }), e.status_code
 
     return app
+
 
 app = create_app()
 
