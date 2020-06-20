@@ -88,12 +88,42 @@ class CapstoneTestCase(unittest.TestCase):
 
         self.assertEqual(res.status_code, 200)
         self.assertEqual(data['success'], True)
-        self.assertEqual(data['deleted'], '{}'.format(actor_id_to_delete))
+        self.assertTrue(data['deleted'])
         self.assertIsNone(deleted_actor)
 
     def test_404_delete_actor(self):
         actor_id_to_delete = Actors.query.order_by(Actors.id.desc()).first().id + 1
         res = self.client().delete('/actors/{}'.format(actor_id_to_delete))
+        data = json.loads(res.data)
+
+        self.assertEqual(res.status_code, 404)
+        self.assertEqual(data['success'], False)
+
+    
+    def test_change_actor(self):
+        changes_to_be_made={
+            'name': 'Changed_Name',
+            'gender': 'Changed_Gender'
+        }
+        actor_id_to_change = Actors.query.first().id
+        res = self.client().patch('/actors/{}'.format(actor_id_to_change), json = changes_to_be_made)
+        data = json.loads(res.data)
+        changed_actor = Actors.query.get(data['changed'])
+
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(data['success'], True)
+        self.assertTrue(data['changed'])
+        self.assertTrue(data['actor'])
+        self.assertEqual(changed_actor.name, changes_to_be_made['name'])
+        self.assertEqual(changed_actor.gender, changes_to_be_made['gender'])
+
+    def test_404_change_actor(self):
+        changes_to_be_made={
+            'name': 'Changed_Name',
+            'gender': 'Changed_Gender'
+        }
+        actor_id_to_change = Actors.query.order_by(Actors.id.desc()).first().id + 1
+        res = self.client().patch('/actors/{}'.format(actor_id_to_change), json = changes_to_be_made)
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 404)
@@ -164,6 +194,35 @@ class CapstoneTestCase(unittest.TestCase):
     def test_404_delete_movie(self):
         movie_id_to_delete = Movies.query.order_by(Movies.id.desc()).first().id + 1
         res = self.client().delete('/movies/{}'.format(movie_id_to_delete))
+        data = json.loads(res.data)
+
+        self.assertEqual(res.status_code, 404)
+        self.assertEqual(data['success'], False)
+
+    def test_change_movie(self):
+        changes_to_be_made={
+            'name': 'Changed_Name',
+            'releasedate': '2000-01-01 00:00:00'
+        }
+        movie_id_to_change = Movies.query.first().id
+        res = self.client().patch('/movies/{}'.format(movie_id_to_change), json = changes_to_be_made)
+        data = json.loads(res.data)
+        changed_movie = Movies.query.get(data['changed'])
+
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(data['success'], True)
+        self.assertTrue(data['changed'])
+        self.assertTrue(data['movie'])
+        self.assertEqual(changed_movie.name, changes_to_be_made['name'])
+        self.assertTrue(changed_movie.releasedate.strftime("%Y-%m-%d %H:%M:%S"), changes_to_be_made['releasedate'])
+
+    def test_404_change_movie(self):
+        changes_to_be_made={
+            'name': 'Changed_Name',
+            'releasedate': '2000-01-01 00:00:00'
+        }
+        movie_id_to_change = Movies.query.order_by(Movies.id.desc()).first().id + 1
+        res = self.client().patch('/movies/{}'.format(movie_id_to_change), json = changes_to_be_made)
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 404)

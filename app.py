@@ -143,7 +143,47 @@ def create_app(test_config=None):
     '''
     @app.route('/actors/<actor_id>', methods=['PATCH'])
     def change_actor(actor_id):
-        return "actor changed"
+        abort_code = None
+
+        try:
+            actor_to_change = Actors.query.filter(
+                Actors.id == actor_id).one_or_none()
+
+            if actor_to_change is None:
+                abort_code = 404
+
+            body = request.get_json()
+
+            if body is not None:
+                new_actor_name = body.get('name', None)
+                new_actor_age = body.get('age', None)
+                new_actor_gender = body.get('gender', None)
+
+            if abort_code is None:
+                if new_actor_name is not None:
+                    actor_to_change.name = new_actor_name
+                
+                if new_actor_age is not None:
+                    actor_to_change.age = new_actor_age
+
+                if new_actor_gender is not None:
+                    actor_to_change.gender = new_actor_gender
+
+                actor_to_change.update()
+
+                return jsonify({
+                    'success': True,
+                    'changed': actor_id,
+                    'actor': actor_to_change.format()
+                })
+        except BaseException:
+            db.session.rollback()
+            abort_code = 422
+        finally:
+            db.session.close
+
+        if abort_code:
+            abort(abort_code)
 
 
     ### Basic movie APIs
@@ -245,7 +285,43 @@ def create_app(test_config=None):
     '''
     @app.route('/movies/<movie_id>', methods=['PATCH'])
     def change_movie(movie_id):
-        return "movie changed"
+        abort_code = None
+
+        try:
+            movie_to_change = Movies.query.filter(
+                Movies.id == movie_id).one_or_none()
+
+            if movie_to_change is None:
+                abort_code = 404
+
+            body = request.get_json()
+
+            if body is not None:
+                new_movie_name = body.get('name', None)
+                new_movie_releasedate = body.get('releasedate', None)
+
+            if abort_code is None:
+                if new_movie_name is not None:
+                    movie_to_change.name = new_movie_name
+                
+                if new_movie_releasedate is not None:
+                    movie_to_change.releasedate = new_movie_releasedate
+
+                movie_to_change.update()
+
+                return jsonify({
+                    'success': True,
+                    'changed': movie_id,
+                    'movie': movie_to_change.format()
+                })
+        except BaseException:
+            db.session.rollback()
+            abort_code = 422
+        finally:
+            db.session.close
+
+        if abort_code:
+            abort(abort_code)
 
 
 
