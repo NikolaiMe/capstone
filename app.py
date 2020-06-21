@@ -32,6 +32,19 @@ def create_app(test_config=None):
 
     # ENDPOINTS
 
+    @app.route('/', methods=['GET'])
+    def init():
+        return '''
+                    <h1>Welcome to the capstone project!</h1>
+                    <p>This project is the final project
+                    of the udacity Full Stack Developer nanodegree
+                    by Nikolai Merz.</p>
+                    <p>This is an API, without a frontend. For API
+                    documentation and more information please check
+                    <a href='https://github.com/NikolaiMe/capstone'>
+                    this github repository</a></p>
+                '''
+
     # Actor APIs
 
     '''
